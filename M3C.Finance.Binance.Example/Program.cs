@@ -22,9 +22,11 @@ namespace M3C.Finance.Binance.Example
             var timeResponseAsync = publicRestClient.Time();
             var syncResponse = publicRestClient.TimeSync();
 
-            PublicEndpointExamples();
-            SignedEndpointExamples();
+            //PublicEndpointExamples();
+            //SignedEndpointExamples();
             WebSocketExamples();
+
+            Console.ReadLine();
 
         }
 
@@ -44,38 +46,38 @@ namespace M3C.Finance.Binance.Example
             var depthResult = publicRestClient.Depth("NEOBTC").Result;
 
             //Get only the first 10 Orderbook records
-            var limitedDepthResult = publicRestClient.Depth("NEOBTC", 10).Result;
-            Console.WriteLine($"First Ask Price: {depthResult.Asks[0].Price}, First Ask Quantity: {depthResult.Asks[0].Quantity}");
-            Console.WriteLine($"NoLimit Record Count: {depthResult.Asks.Count}, Limited Record Count: {limitedDepthResult.Asks.Count}");
+            //var limitedDepthResult = publicRestClient.Depth("NEOBTC", 10).Result;
+            //Console.WriteLine($"First Ask Price: {depthResult.Asks[0].Price}, First Ask Quantity: {depthResult.Asks[0].Quantity}");
+            //Console.WriteLine($"NoLimit Record Count: {depthResult.Asks.Count}, Limited Record Count: {limitedDepthResult.Asks.Count}");
 
-            //For getting Compressed/Aggregate trades list
-            var aggregateTrades = publicRestClient.AggregateTrades("NEOBTC").Result;
-            Console.WriteLine($"AggTradeId: {aggregateTrades[0].AggregateTradeId} Price: {aggregateTrades[0].Price}  Quantity: {aggregateTrades[0].Quantity}  WasMaker: {aggregateTrades[0].WasBuyerTheMaker}");
+            ////For getting Compressed/Aggregate trades list
+            //var aggregateTrades = publicRestClient.AggregateTrades("NEOBTC").Result;
+            //Console.WriteLine($"AggTradeId: {aggregateTrades[0].AggregateTradeId} Price: {aggregateTrades[0].Price}  Quantity: {aggregateTrades[0].Quantity}  WasMaker: {aggregateTrades[0].WasBuyerTheMaker}");
 
-            //Get KLines/Candlestick data for given Trade Pair
-            var kLines = publicRestClient.KLines("NEOBTC", KlineInterval.Month1).Result;
-            foreach (var item in kLines)
-            {
-                Console.WriteLine($"# of Trades: {item.NumberOfTrades} Close: {item.Close} Volume: {item.Volume}");
-            }
+            ////Get KLines/Candlestick data for given Trade Pair
+            //var kLines = publicRestClient.KLines("BTCUSDT", KlineInterval.Minute1).Result;
+            //foreach (var item in kLines)
+            //{
+            //    Console.WriteLine($"# of Trades: {item.NumberOfTrades} Close: {item.Close} Volume: {item.Volume}");
+            //}
 
-            //Get Daily Ticker for given Trade Pair
-            var dailyTicker = publicRestClient.TickerDaily("NEOBTC").Result;
-            Console.WriteLine($"Ask: {dailyTicker.AskPrice} Bid: {dailyTicker.BidPrice} Change: {dailyTicker.PriceChange}");
+            ////Get Daily Ticker for given Trade Pair
+            //var dailyTicker = publicRestClient.TickerDaily("NEOBTC").Result;
+            //Console.WriteLine($"Ask: {dailyTicker.AskPrice} Bid: {dailyTicker.BidPrice} Change: {dailyTicker.PriceChange}");
 
-            //Get All Ticker Information
-            var allPricesTicker = publicRestClient.TickerAllPrices().Result;
-            foreach (var item in allPricesTicker)
-            {
-                Console.WriteLine($"{item.Symbol} : {item.Price}");
-            }
+            ////Get All Ticker Information
+            //var allPricesTicker = publicRestClient.TickerAllPrices().Result;
+            //foreach (var item in allPricesTicker)
+            //{
+            //    Console.WriteLine($"{item.Symbol} : {item.Price}");
+            //}
 
-            //Get AllBookTicker information with price and quantity data
-            var allBookTickers = publicRestClient.AllBookTickers().Result;
-            foreach (var item in allBookTickers)
-            {
-                Console.WriteLine($"{item.Symbol} : AskPrice/Quantity {item.AskPrice} / {item.AskQuantity} BidPrice/Quantity {item.BidPrice} / {item.BidQuantity}");
-            }
+            ////Get AllBookTicker information with price and quantity data
+            //var allBookTickers = publicRestClient.AllBookTickers().Result;
+            //foreach (var item in allBookTickers)
+            //{
+            //    Console.WriteLine($"{item.Symbol} : AskPrice/Quantity {item.AskPrice} / {item.AskQuantity} BidPrice/Quantity {item.BidPrice} / {item.BidQuantity}");
+            //}
         }
 
         static void SignedEndpointExamples()
@@ -134,42 +136,42 @@ namespace M3C.Finance.Binance.Example
         static void WebSocketExamples()
         {
             //Listen For Depth Messages
-            using (var client = new BinanceWebSocketClient())
-            {
-                client.ConnectDepthEndpoint("ethbtc", depthMsg 
-                    => Console.WriteLine($"{depthMsg.EventTime} {depthMsg.Symbol} {depthMsg.AskDepthDelta.Sum(b=>b.Quantity)}"));
-                Thread.Sleep(60000);
-            }
+            //using (var client = new BinanceWebSocketClient())
+            //{
+            //    client.ConnectDepthEndpoint("ethbtc", depthMsg 
+            //        => Console.WriteLine($"{depthMsg.EventTime} {depthMsg.Symbol} {depthMsg.AskDepthDelta.Sum(b=>b.Quantity)}"));
+            //    Thread.Sleep(60000);
+            //}
 
             //Listen For KLine Messages
             using (var client = new BinanceWebSocketClient())
             {
-                client.ConnectKlineEndpoint("ethbtc", KlineInterval.Minute1, klineMsg 
-                    => Console.WriteLine($"{klineMsg.Symbol} {klineMsg.KLineData.NumberOfTrades}"));
+                client.ConnectKlineEndpoint("btcusdt", KlineInterval.Minute1, klineMsg 
+                    => Console.WriteLine($"{klineMsg.Symbol} {klineMsg.KLineData.Interval} {klineMsg.KLineData.Open} {klineMsg.KLineData.Close}  {klineMsg.KLineData.NumberOfTrades}"));
                 Thread.Sleep(60000);
             }
 
-            //Listen For Trades Messages
-            using (var client = new BinanceWebSocketClient())
-            {
-                client.ConnectTradesEndpoint("ethbtc", tradesMsg 
-                    => Console.WriteLine($"{tradesMsg.Symbol} {tradesMsg.Price} {tradesMsg.Quantity}") );
-                Thread.Sleep(60000);
-            }
+            ////Listen For Trades Messages
+            //using (var client = new BinanceWebSocketClient())
+            //{
+            //    client.ConnectTradesEndpoint("ethbtc", tradesMsg 
+            //        => Console.WriteLine($"{tradesMsg.Symbol} {tradesMsg.Price} {tradesMsg.Quantity}") );
+            //    Thread.Sleep(60000);
+            //}
 
-            //Listen User Data Endpoint
-            //Return ListenKey if you need to explicitly call CloseUserDataStream, KeepAliveUserDataStream from the rest client
-            //Automatically makes keepalive request every 30 seconds
-            var restClient = new BinanceClient(ConfigurationManager.AppSettings["BinanceApiKey"], ConfigurationManager.AppSettings["BinanceApiSecret"]);
-            using (var client = new BinanceWebSocketClient())
-            {
-                var listenKey = client.ConnectUserDataEndpoint(restClient,
-                    accountMessage => Console.WriteLine("UserData Received! " + accountMessage.EventTime),
-                    orderMessage => Console.WriteLine("Order Message Received! " + orderMessage.EventTime),
-                    tradeMessage => Console.WriteLine("Trade Message Received! " + tradeMessage.EventTime)
-                ).Result;
-                Thread.Sleep(300000);
-            }
+            ////Listen User Data Endpoint
+            ////Return ListenKey if you need to explicitly call CloseUserDataStream, KeepAliveUserDataStream from the rest client
+            ////Automatically makes keepalive request every 30 seconds
+            //var restClient = new BinanceClient(ConfigurationManager.AppSettings["BinanceApiKey"], ConfigurationManager.AppSettings["BinanceApiSecret"]);
+            //using (var client = new BinanceWebSocketClient())
+            //{
+            //    var listenKey = client.ConnectUserDataEndpoint(restClient,
+            //        accountMessage => Console.WriteLine("UserData Received! " + accountMessage.EventTime),
+            //        orderMessage => Console.WriteLine("Order Message Received! " + orderMessage.EventTime),
+            //        tradeMessage => Console.WriteLine("Trade Message Received! " + tradeMessage.EventTime)
+            //    ).Result;
+            //    Thread.Sleep(300000);
+            //}
         }
     }
 }
